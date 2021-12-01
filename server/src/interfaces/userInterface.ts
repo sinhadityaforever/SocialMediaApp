@@ -3,12 +3,12 @@ export interface IUser extends Document {
   username: string;
   email: string;
   password: string;
-  profilePictureUrl?: string;
-  coverPictureUrl?: string;
+  profilePicture?: string;
+  coverPicture?: string;
   followers?: any[];
   followings?: any[];
   isAdmin?: boolean;
-  description?: string;
+  desc?: string;
   city?: string;
   from?: string;
   relationship?: number;

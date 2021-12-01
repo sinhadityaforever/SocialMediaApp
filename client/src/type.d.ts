@@ -2,12 +2,12 @@ export interface IUser {
   username: string;
   email?: string;
   password?: string;
-  profilePictureUrl?: string;
-  coverPictureUrl?: string;
+  profilePicture?: string;
+  coverPicture?: string;
   followers?: any[];
   followings?: any[];
   isAdmin?: boolean;
-  description?: string;
+  desc?: string;
   city?: string;
   from?: string;
   relationship?: number;
@@ -19,15 +19,16 @@ export type userProps = {
 
 //TODO:change userId to string
 export interface IPost {
-  userId: number;
+  userId: string;
   desc?: string;
-  photo?: string;
+  img?: string;
   likes?: any[];
+  createdAt?: Date;
 }
 
 export type postProps = {
   post: IPost & {
-    id: number;
+    _id: string;
     date: string;
     like: number;
     comment: number;

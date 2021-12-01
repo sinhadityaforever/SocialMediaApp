@@ -5,6 +5,7 @@ dotenv.config();
 import endpoints from "./endpoint.config";
 import helmet from "helmet";
 import morgan from "morgan";
+import cors from "cors";
 const app: Express = express();
 
 //Connect to mongoose
@@ -17,6 +18,7 @@ mongoose.connect(connectionURL).then(() => {
 //essential middleware
 app.use(express.json());
 app.use(helmet());
+app.use(cors());
 app.use(morgan("tiny"));
 
 //Routes

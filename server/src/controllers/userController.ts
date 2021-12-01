@@ -48,13 +48,29 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
 
 const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const user = await User.findById(req.params.id);
+    const username = req.query.username?.toString();
+    const userId = req.query.userId;
+    const user = username
+      ? await User.findOne({ username: username })
+      : await User.findById(userId);
 
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json(err);
   }
 };
+// const getUserByUsername = async (
+//   req: Request,
+//   res: Response
+// ): Promise<void> => {
+//   try {
+//     const user = await User.findOne({ username: req.params.username });
+
+//     res.status(200).json(user);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// };
 
 const followUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -108,4 +124,11 @@ const unfollowUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { updateUser, deleteUser, getUser, followUser, unfollowUser };
+export {
+  // getUserByUsername,
+  updateUser,
+  deleteUser,
+  getUser,
+  followUser,
+  unfollowUser,
+};

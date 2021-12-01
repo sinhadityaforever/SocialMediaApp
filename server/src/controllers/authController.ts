@@ -33,8 +33,17 @@ const register = async (req: Request, res: Response): Promise<void> => {
 
 const login = async (req: Request, res: Response): Promise<void> => {
   try {
+    console.log(req.body);
+
     const user = await User.findOne({ email: req.body.email });
-    !user && res.status(404).json("user not found");
+    console.log(user);
+
+    if (!user) {
+      res.status(501).json({
+        message: "Error loading user",
+      });
+      return;
+    }
 
     const validPassword: boolean = await bcrypt.compare(
       req.body.password,
@@ -44,7 +53,10 @@ const login = async (req: Request, res: Response): Promise<void> => {
 
     res.status(200).json(user);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({
+      message: "failed",
+      error: err,
+    });
   }
 };
 

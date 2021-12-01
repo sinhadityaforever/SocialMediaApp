@@ -11,7 +11,7 @@ const Home = () => {
       <div className="homeContainer">
         <Sidebar />
         <Feed />
-        <Rightbar profile={false} />
+        <Rightbar />
       </div>
     </>
   );
