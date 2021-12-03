@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/userModel";
 import bcrypt from "bcrypt";
+import { IUser } from "../interfaces/userInterface";
 
 const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -59,18 +60,27 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json(err);
   }
 };
-// const getUserByUsername = async (
-//   req: Request,
-//   res: Response
-// ): Promise<void> => {
-//   try {
-//     const user = await User.findOne({ username: req.params.username });
 
-//     res.status(200).json(user);
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// };
+const getFriends = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user = await User.findById(req.params.userId);
+    const friends = await Promise.all(
+      user!.followings!.map((friendId) => {
+        return User.findById(friendId);
+      })
+    );
+    let friendList: any[] = [];
+    friends.map((friend) => {
+      const _id = friend?._id;
+      const username = friend?.username;
+      const profilePicture = friend?.profilePicture;
+      friendList.push({ _id, username, profilePicture });
+    });
+    res.status(200).json(friendList);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
 
 const followUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -131,4 +141,5 @@ export {
   getUser,
   followUser,
   unfollowUser,
+  getFriends,
 };

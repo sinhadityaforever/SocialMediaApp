@@ -2,11 +2,32 @@ import { Request, Response } from "express";
 import { IUser } from "../interfaces/userInterface";
 import Post from "../models/postModel";
 import User from "../models/userModel";
+import cloudinary from "cloudinary";
 
 const createPost = async (req: Request, res: Response): Promise<void> => {
-  const newPost = new Post(req.body);
+  let savedPost;
   try {
-    const savedPost = await newPost.save();
+    if (req.body.tempImg) {
+      console.log("tempImg is: " + req.body.tempImg);
+
+      const result = await cloudinary.v2.uploader.upload(req.body.tempImg, {
+        upload_preset: "socio",
+      });
+      const url = result.url;
+      console.log("url is: " + url);
+
+      //  const secure_url= result.secure_url;
+      const newPost = new Post({
+        userId: req.body.userId,
+        desc: req.body.desc,
+        img: url,
+      });
+      savedPost = await newPost.save();
+    } else {
+      const newPost = new Post(req.body);
+      savedPost = await newPost.save();
+    }
+
     res.status(200).json(savedPost);
   } catch (err) {
     res.status(500).json(err);

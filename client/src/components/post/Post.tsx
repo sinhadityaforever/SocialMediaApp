@@ -11,6 +11,11 @@ const Post: React.FC<postProps> = ({ post }) => {
   const [like, setLike] = useState(post.likes!.length);
   const [isLiked, setIsLiked] = useState(false);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
+  useEffect(() => {
+    setIsLiked(post.likes!.includes(selectedUser?._id));
+  }, [selectedUser, post.likes]);
+
   const likeHandler = async () => {
     try {
       console.log(post._id);

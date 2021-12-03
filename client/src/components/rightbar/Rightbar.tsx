@@ -2,16 +2,75 @@ import "./rightbar.css";
 import { Users } from "../../dummyData";
 import Online from "../online/Online";
 import { IUser } from "../../type";
-
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { Add, Remove } from "@material-ui/icons";
+import { follow, unfollow } from "../../features/userSlice";
 //TODO: add type to profile
 type Props = {
-  user?: IUser;
+  user?: IUser & {
+    _id?: string;
+  };
 };
 
 const Rightbar: React.FC<Props> = ({ user }) => {
+  const dispatch = useAppDispatch();
+  const selectedUser = useAppSelector((state) => state.user.user);
+  const [friends, setFriends] = useState<any[]>([]);
+  const [followed, setFollowed] = useState<any>(
+    selectedUser?.followings?.includes(user?._id)
+  );
+
+  useEffect(() => {
+    const getFriends = async () => {
+      try {
+        const friendList = await axios.get(
+          `${process.env.REACT_APP_SERVER}/users/friends/${user!._id}`
+        );
+        setFriends(friendList.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getFriends();
+  }, [user]);
+
+  const handleClick = async () => {
+    try {
+      if (followed) {
+        await axios.put(
+          `${process.env.REACT_APP_SERVER}/users/${user?._id}/unfollow`,
+          {
+            userId: selectedUser?._id,
+          }
+        );
+        dispatch(unfollow(user?._id));
+      } else {
+        await axios.put(
+          `${process.env.REACT_APP_SERVER}/users/${user?._id}/follow`,
+          {
+            userId: selectedUser?._id,
+          }
+        );
+        dispatch(follow(user?._id));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setFollowed(!followed);
+  };
+
   const HomeRightbar = () => {
     return (
       <>
+        {user?.username !== selectedUser?.username && (
+          <button className="rightbarFollowButton">
+            {followed ? "Unfollow" : "Follow"}
+            {followed ? <Remove /> : <Add />}
+          </button>
+        )}
         <div className="birthdayContainer">
           <img
             className="birthdayImg"
@@ -56,56 +115,25 @@ const Rightbar: React.FC<Props> = ({ user }) => {
           </div>
         </div>
         <h4 className="rightbarTitle">User friends</h4>
-        <div className="rightbarFollowings">
-          <div className="rightbarFollowing">
-            <img
-              src="http://localhost:3000/assets/person/1.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">John Carter</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="http://localhost:3000/assets/person/2.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">John Carter</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="http://localhost:3000/assets/person/3.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">John Carter</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="http://localhost:3000/assets/person/4.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">John Carter</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="http://localhost:3000/assets/person/5.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">John Carter</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="http://localhost:3000/assets/person/6.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">John Carter</span>
-          </div>
-        </div>
+        {friends.map((friend) => {
+          <Link to={`/profile/${friend.username}`}>
+            <div className="rightbarFollowings">
+              <div className="rightbarFollowing">
+                <img
+                  src={friend.profilePicture}
+                  alt=""
+                  className="rightbarFollowingImg"
+                />
+                <span
+                  className="rightbarFollowingName"
+                  style={{ textDecoration: "none" }}
+                >
+                  {friend.username}
+                </span>
+              </div>
+            </div>
+          </Link>;
+        })}
       </>
     );
   };

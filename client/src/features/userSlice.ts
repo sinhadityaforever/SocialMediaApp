@@ -33,6 +33,14 @@ export const userSlice = createSlice({
       state.user = undefined;
       state.error = true;
     },
+    follow: (state, action: PayloadAction<any>) => {
+      state.user!.followings = [state.user!.followings?.push(action.payload)];
+    },
+    unfollow: (state, action: PayloadAction<any>) => {
+      state.user!.followings = state.user!.followings?.filter(
+        (following) => following !== action.payload
+      );
+    },
   },
 });
 
@@ -41,6 +49,8 @@ export const {
   loginStart,
   loginSuccess,
   loginFailed,
+  follow,
+  unfollow,
 } = userSlice.actions;
 // export const selectUser = (state: RootState) => state.user.user;
 export default userSlice.reducer;

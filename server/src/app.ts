@@ -6,17 +6,26 @@ import endpoints from "./endpoint.config";
 import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
+import cloudinary from "cloudinary";
 const app: Express = express();
 
 //Connect to mongoose
-const connectionURL: string = "mongodb://localhost:27017/socialmediaapp";
+const connectionURL: string = `mongodb+srv://${endpoints.mongo_username}:${endpoints.mongo_password}@cluster0.dgbze.mongodb.net/${endpoints.mongo_db_name}?retryWrites=true&w=majority
+`;
 
 mongoose.connect(connectionURL).then(() => {
   console.log("Mongo connected");
 });
 
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 //essential middleware
-app.use(express.json());
+app.use(express.json({ limit: "50MB" }));
+app.use(express.urlencoded({ limit: "50MB", extended: true }));
 app.use(helmet());
 app.use(cors());
 app.use(morgan("tiny"));

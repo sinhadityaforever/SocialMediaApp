@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./app.css";
 import Profile from "./pages/profile/Profile";
 import Home from "./pages/home/Home";
@@ -8,12 +8,24 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
   Navigate,
 } from "react-router-dom";
-import { useAppSelector } from "./app/hooks";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
+import { loginSuccess } from "./features/userSlice";
 
 function App() {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("user");
+    if (loggedInUser) {
+      const foundUser = JSON.parse(loggedInUser);
+      console.log(foundUser);
+
+      dispatch(loginSuccess(foundUser));
+    } else {
+      console.log("cant find storedUser");
+    }
+  }, []);
   const user = useAppSelector((state) => state.user.user);
 
   return (
@@ -25,7 +37,10 @@ function App() {
           path="/register"
           element={user ? <Navigate to="/" /> : <Register />}
         />
-        <Route path="/profile/:username" element={<Profile />} />
+        <Route
+          path="/profile/:username"
+          element={user ? <Navigate to="/" /> : <Profile />}
+        />
       </Routes>
     </Router>
   );

@@ -17,6 +17,9 @@ export const loginHandler = async (
     console.log(res.data);
 
     dispatch(loginSuccess(res.data));
+
+    localStorage.setItem("user", JSON.stringify(res.data));
+    console.log(localStorage.getItem("user"));
   } catch (error) {
     console.log(error);
 

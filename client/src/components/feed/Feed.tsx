@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
-import { IUser } from "../../type";
+import { IPost, IUser } from "../../type";
 import Post from "../post/Post";
 import Share from "../share/Share";
 import "./feed.css";
@@ -23,7 +23,13 @@ const Feed: React.FC<FeedProps> = ({ username }) => {
             `${process.env.REACT_APP_SERVER}/posts/timeline/` +
               selectedUser!._id
           );
-      setPosts(res.data);
+      setPosts(
+        res.data.sort((p1: any, p2: any) => {
+          return (
+            (new Date(p2.createdAt) as any) - (new Date(p1.createdAt) as any)
+          );
+        })
+      );
     };
     fetchPosts();
     console.log(posts);
@@ -33,7 +39,8 @@ const Feed: React.FC<FeedProps> = ({ username }) => {
     <div className="feed">
       {posts && (
         <div className="feedWrapper">
-          <Share />
+          {(!username || username === selectedUser?.username) && <Share />}
+
           {posts.map((p: any) => (
             <Post key={p._id} post={p} />
           ))}
