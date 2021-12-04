@@ -27,6 +27,7 @@ export interface IPost {
 }
 
 export type postProps = {
+  isProfile?: boolean;
   post: IPost & {
     _id: string;
     date: string;

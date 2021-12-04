@@ -29,7 +29,7 @@ const userSchema: Schema = new Schema(
     coverPicture: {
       type: String,
       default:
-        "https://media.istockphoto.com/vectors/blank-opened-book-magazine-and-notebook-template-with-soft-shadows-on-vector-id1162499064?k=20&m=1162499064&s=612x612&w=0&h=wG2ku-XjDYvHdtq3VnzVdbOQAf_VOf0fOycPIBdS_5U=",
+        "https://cultivatedculture.com/wp-content/uploads/2019/05/Chromatic-LinkedIn-Cover-Photo-Background-1024x311.png",
     },
     followers: {
       type: Array,
@@ -56,8 +56,7 @@ const userSchema: Schema = new Schema(
       max: 50,
     },
     relationship: {
-      type: Number,
-      enum: [1, 2, 3],
+      type: String,
     },
   },
   { timestamps: true }

@@ -22,7 +22,7 @@ export const loginHandler = async (
     console.log(localStorage.getItem("user"));
   } catch (error) {
     console.log(error);
-
+    alert("Failed to login. Check your credentials.");
     dispatch(loginFailed());
   }
 };

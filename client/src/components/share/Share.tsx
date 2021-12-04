@@ -1,11 +1,19 @@
 import "./share.css";
-import { PermMedia, Label, Room, EmojiEmotions } from "@material-ui/icons";
+import {
+  PermMedia,
+  Label,
+  Room,
+  EmojiEmotions,
+  Cancel,
+} from "@material-ui/icons";
 import { useAppSelector } from "../../app/hooks";
 import { useRef, useState } from "react";
 import { IPost } from "../../type";
 import axios from "axios";
+import { CircularProgress, Tooltip } from "@material-ui/core";
 
 const Share = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const selectedUser = useAppSelector((state) => state.user.user);
   const descRef = useRef<any>();
   const [preview, setPreview] = useState<any>();
@@ -20,6 +28,11 @@ const Share = () => {
   };
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!descRef.current.value) {
+      alert("Please enter something!");
+      return;
+    }
+    setLoading(true);
     let newPost: IPost & {
       tempImg?: string;
     };
@@ -45,6 +58,7 @@ const Share = () => {
       alert("Failed to post! Try agin :(");
       console.log(error);
     }
+    setLoading(false);
   };
   return (
     <div className={preview ? "share_photoInserted" : "share"}>
@@ -62,13 +76,27 @@ const Share = () => {
             ref={descRef}
           />
         </div>
-        {preview && <img className="postImg" src={preview} alt="" />}
+        {preview && (
+          <div className="share_imageDiv">
+            <img className="postImg" src={preview} alt="" />
+            <span
+              className="share_crossButton"
+              onClick={() => {
+                setPreview(undefined);
+              }}
+            >
+              <Tooltip title="Remove this image">
+                <Cancel />
+              </Tooltip>
+            </span>
+          </div>
+        )}
         <hr className="shareHr" />
         <form className="shareBottom" onSubmit={submitHandler}>
           <label htmlFor="file" className="shareOptions">
             <div className="shareOption">
               <PermMedia htmlColor="tomato" className="shareIcon" />
-              <span className="shareOptionText">Photo or Video</span>
+              <span className="shareOptionText">Photo</span>
               <input
                 onChange={(e) => {
                   previewFile(e.target.files![0]);
@@ -94,7 +122,11 @@ const Share = () => {
             </div>
           </label>
           <button className="shareButton" type="submit">
-            Share
+            {loading ? (
+              <CircularProgress size="20px" style={{ color: "white" }} />
+            ) : (
+              "Share"
+            )}
           </button>
         </form>
       </div>

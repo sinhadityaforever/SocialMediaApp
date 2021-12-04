@@ -11,5 +11,5 @@ export interface IUser extends Document {
   desc?: string;
   city?: string;
   from?: string;
-  relationship?: number;
+  relationship?: string;
 }

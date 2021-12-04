@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import LoadingBar from "react-top-loading-bar";
 import { useAppSelector } from "../../app/hooks";
 import { IPost, IUser } from "../../type";
 import Post from "../post/Post";
@@ -8,13 +9,16 @@ import "./feed.css";
 const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 type FeedProps = {
   username?: string;
+  isProfile?: boolean;
 };
 
-const Feed: React.FC<FeedProps> = ({ username }) => {
+const Feed: React.FC<FeedProps> = ({ username, isProfile }) => {
+  const loadRef = useRef<any>();
   const [posts, setPosts] = useState([]);
   const selectedUser = useAppSelector((state) => state.user.user);
   useEffect(() => {
     const fetchPosts = async () => {
+      loadRef.current.continuousStart();
       const res = username
         ? await axios.get(
             `${process.env.REACT_APP_SERVER}/posts/profile/${username}`
@@ -30,19 +34,22 @@ const Feed: React.FC<FeedProps> = ({ username }) => {
           );
         })
       );
+      loadRef.current.complete();
     };
     fetchPosts();
+
     console.log(posts);
-  }, [username, selectedUser]);
+  }, [username]);
 
   return (
     <div className="feed">
+      <LoadingBar ref={loadRef} color="white" height={5} />
       {posts && (
         <div className="feedWrapper">
           {(!username || username === selectedUser?.username) && <Share />}
 
           {posts.map((p: any) => (
-            <Post key={p._id} post={p} />
+            <Post isProfile={isProfile} key={p._id} post={p} />
           ))}
         </div>
       )}

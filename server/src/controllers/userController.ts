@@ -2,30 +2,57 @@ import { Request, Response } from "express";
 import User from "../models/userModel";
 import bcrypt from "bcrypt";
 import { IUser } from "../interfaces/userInterface";
+import cloudinary from "cloudinary";
 
 const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    if (req.body.userId === req.params.id || req.body.isAdmin) {
-      if (req.body.password) {
-        try {
-          const salt = await bcrypt.genSalt(10);
-          req.body.password = await bcrypt.hash(req.body.password, salt);
-        } catch (err) {
-          res.status(500).json(err);
-        }
-      }
-      try {
-        const user = await User.findByIdAndUpdate(req.params.id, {
-          $set: req.body,
+    try {
+      if (req.body.tempImg) {
+        const result = await cloudinary.v2.uploader.upload(req.body.tempImg, {
+          upload_preset: "socio",
         });
-        res.status(200).json("Account has been updated");
-      } catch (err) {
-        res.status(500).json(err);
+        const url = result.url;
+        console.log("url is: " + url);
+        const user = await User.findByIdAndUpdate(
+          req.params.userId,
+          {
+            desc: req.body.desc,
+            profilePicture: url,
+            city: req.body.city,
+            from: req.body.from,
+            relationship: req.body.relationship,
+          },
+          { new: true }
+        );
+        console.log(user);
+
+        //  const secure_url= result.secure_url;
+      } else {
+        console.log(req.body);
+
+        const user = await User.findByIdAndUpdate(
+          req.params.userId,
+          {
+            desc: req.body.desc,
+
+            city: req.body.city,
+            from: req.body.from,
+            relationship: req.body.relationship,
+          },
+          { new: true }
+        );
+        console.log("halahaala" + user);
       }
-    } else {
-      res.status(403).json("You can update only your account!");
+
+      res.status(200).json("Account has been updated");
+    } catch (err) {
+      console.log(err);
+
+      res.status(500).json(err);
     }
   } catch (error) {
+    console.log(error);
+
     res.status(500).json(error);
   }
 };
@@ -69,14 +96,8 @@ const getFriends = async (req: Request, res: Response): Promise<void> => {
         return User.findById(friendId);
       })
     );
-    let friendList: any[] = [];
-    friends.map((friend) => {
-      const _id = friend?._id;
-      const username = friend?.username;
-      const profilePicture = friend?.profilePicture;
-      friendList.push({ _id, username, profilePicture });
-    });
-    res.status(200).json(friendList);
+
+    res.status(200).json(friends);
   } catch (error) {
     res.status(400).json(error);
   }
@@ -134,6 +155,33 @@ const unfollowUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const validateUsername = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user = await User.exists({ username: req.params.username });
+    if (user) {
+      res.status(201).json({ message: "There exists a user" });
+    } else {
+      res.status(202).json({ message: "Theres no user" });
+    }
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+  try {
+    console.log(req.params.userId);
+
+    const users = await User.find({
+      _id: { $nin: req.params.userId as any },
+    });
+    res.status(200).json(users);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json(error);
+  }
+};
+
 export {
   // getUserByUsername,
   updateUser,
@@ -142,4 +190,9 @@ export {
   followUser,
   unfollowUser,
   getFriends,
+  validateUsername,
+  getAllUsers,
 };
+function useState(arg0: boolean): [any, any] {
+  throw new Error("Function not implemented.");
+}

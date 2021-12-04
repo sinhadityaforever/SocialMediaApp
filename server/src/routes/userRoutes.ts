@@ -6,13 +6,18 @@ import {
   followUser,
   unfollowUser,
   getFriends,
+  validateUsername,
+  getAllUsers,
+
   // getUserByUsername,
 } from "../controllers/userController";
 
 const router: Router = Router();
-
+router.route("/all/:userId").get(getAllUsers);
+router.route("/validate/:username").get(validateUsername);
 router.route("/friends/:userId").get(getFriends);
-router.route("/").put(updateUser).delete(deleteUser).get(getUser);
+router.route("/").delete(deleteUser).get(getUser);
+router.route("/update/:userId").put(updateUser);
 // router.route("/username/:username").get(getUserByUsername);
 router.route("/:id/follow").put(followUser);
 router.route("/:id/unfollow").put(unfollowUser);

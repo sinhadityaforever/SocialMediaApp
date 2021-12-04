@@ -1,17 +1,23 @@
-import { IDummyUser } from "../../dummyData";
-import { userProps } from "../../type";
+import { Link } from "react-router-dom";
+
+import { IUser, userProps } from "../../type";
 import "./closeFriend.css";
 //TODO:change dummy type
 type Props = {
-  user: IDummyUser;
+  user: IUser;
 };
 
 const CloseFriend: React.FC<Props> = ({ user }) => {
   return (
-    <li className="sidebarFriend">
-      <img className="sidebarFriendImg" src={user.profilePicture} alt="" />
-      <span className="sidebarFriendName">{user.username}</span>
-    </li>
+    <Link
+      style={{ textDecoration: "none", color: "black" }}
+      to={`/profile/${user.username}`}
+    >
+      <li className="sidebarFriend">
+        <img className="sidebarFriendImg" src={user.profilePicture} alt="" />
+        <span className="sidebarFriendName">{user.username}</span>
+      </li>
+    </Link>
   );
 };
 

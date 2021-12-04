@@ -6,7 +6,7 @@ import axios from "axios";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
-const Post: React.FC<postProps> = ({ post }) => {
+const Post: React.FC<postProps> = ({ post, isProfile }) => {
   const selectedUser = useAppSelector((state) => state.user.user);
   const [like, setLike] = useState(post.likes!.length);
   const [isLiked, setIsLiked] = useState(false);
@@ -38,7 +38,6 @@ const Post: React.FC<postProps> = ({ post }) => {
         `${process.env.REACT_APP_SERVER}/users?userId=${post.userId}`
       );
       setUser(res.data);
-      console.log(user);
     };
     fetchUser();
   }, [post.userId]);
@@ -49,7 +48,7 @@ const Post: React.FC<postProps> = ({ post }) => {
         <div className="postWrapper">
           <div className="postTop">
             <div className="postTopLeft">
-              <Link to={`profile/${user.username}`}>
+              <Link to={isProfile ? "" : `profile/${user.username}`}>
                 <img
                   className="postProfileImg"
                   src={user!.profilePicture || PF + "person/noAvatar.png"}
@@ -71,13 +70,13 @@ const Post: React.FC<postProps> = ({ post }) => {
             <div className="postBottomLeft">
               <img
                 className="likeIcon"
-                src="http://localhost:3000/assets/like.png"
+                src="/assets/like.png"
                 onClick={likeHandler}
                 alt=""
               />
               <img
                 className="likeIcon"
-                src="http://localhost:3000/assets/heart.png"
+                src="/assets/heart.png"
                 onClick={likeHandler}
                 alt=""
               />

@@ -64,7 +64,9 @@
   font-weight: 500;
   cursor: pointer;
 }
-
+.loginButton:disabled {
+  background-color: #7e7e7e;
+}
 .loginForgot {
   text-align: center;
   color: #1775ee;

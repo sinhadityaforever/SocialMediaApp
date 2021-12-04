@@ -1,5 +1,5 @@
 import "./rightbar.css";
-import { Users } from "../../dummyData";
+
 import Online from "../online/Online";
 import { IUser } from "../../type";
 import { useEffect, useState } from "react";
@@ -13,15 +13,39 @@ type Props = {
   user?: IUser & {
     _id?: string;
   };
+  showFollow?: boolean;
 };
 
-const Rightbar: React.FC<Props> = ({ user }) => {
+const Rightbar: React.FC<Props> = ({ user, showFollow }) => {
+  console.log(user);
+
   const dispatch = useAppDispatch();
   const selectedUser = useAppSelector((state) => state.user.user);
   const [friends, setFriends] = useState<any[]>([]);
   const [followed, setFollowed] = useState<any>(
     selectedUser?.followings?.includes(user?._id)
   );
+
+  const [users, setUsers] = useState<IUser[] | undefined>();
+
+  useEffect(() => {
+    setFollowed(selectedUser?.followings?.includes(user?._id));
+  }, [user]);
+  useEffect(() => {
+    const getAllSuggestions = async () => {
+      console.log(selectedUser?.followings);
+
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_SERVER}/users/all/${selectedUser?._id}`
+        );
+        setUsers(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getAllSuggestions();
+  }, []);
 
   useEffect(() => {
     const getFriends = async () => {
@@ -38,6 +62,8 @@ const Rightbar: React.FC<Props> = ({ user }) => {
   }, [user]);
 
   const handleClick = async () => {
+    console.log("clicked");
+
     try {
       if (followed) {
         await axios.put(
@@ -47,6 +73,7 @@ const Rightbar: React.FC<Props> = ({ user }) => {
           }
         );
         dispatch(unfollow(user?._id));
+        console.log("dispatched");
       } else {
         await axios.put(
           `${process.env.REACT_APP_SERVER}/users/${user?._id}/follow`,
@@ -55,42 +82,40 @@ const Rightbar: React.FC<Props> = ({ user }) => {
           }
         );
         dispatch(follow(user?._id));
+        console.log("dispatched");
       }
     } catch (error) {
       console.log(error);
     }
     setFollowed(!followed);
+    console.log("end");
   };
 
   const HomeRightbar = () => {
     return (
       <>
-        {user?.username !== selectedUser?.username && (
-          <button className="rightbarFollowButton">
-            {followed ? "Unfollow" : "Follow"}
-            {followed ? <Remove /> : <Add />}
-          </button>
-        )}
         <div className="birthdayContainer">
-          <img
-            className="birthdayImg"
-            src="http://localhost:3000/assets/gift.png"
-            alt=""
-          />
+          <img className="birthdayImg" src={`/assets/gift.png`} alt="" />
           <span className="birthdayText">
             <b>Pola Foster</b> and <b>3 other friends</b> have a birhday today.
           </span>
         </div>
         <img
           className="rightbarAd"
-          src="http://localhost:3000/assets/ad.png"
+          src="https://res.cloudinary.com/dbh0wt0zm/image/upload/v1638611196/Socio_admin/ad5_ap74sb.jpg"
           alt=""
         />
-        <h4 className="rightbarTitle">Online Friends</h4>
+        <h4 className="rightbarTitle">Your Friends</h4>
         <ul className="rightbarFriendList">
-          {Users.map((u) => (
-            <Online key={u.id} user={u} />
-          ))}
+          {users &&
+            users.map((u: any) => (
+              <Link
+                style={{ textDecoration: "none", color: "black" }}
+                to={`/profile/${u.username}`}
+              >
+                <Online key={u.id} user={u} />
+              </Link>
+            ))}
         </ul>
       </>
     );
@@ -99,6 +124,12 @@ const Rightbar: React.FC<Props> = ({ user }) => {
   const ProfileRightbar = () => {
     return (
       <>
+        {user?.username !== selectedUser?.username && showFollow && (
+          <button className="rightbarFollowButton" onClick={handleClick}>
+            {followed ? "Unfollow" : "Follow"}
+            {followed ? <Remove /> : <Add />}
+          </button>
+        )}
         <h4 className="rightbarTitle">User information</h4>
         <div className="rightbarInfo">
           <div className="rightbarInfoItem">

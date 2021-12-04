@@ -2,6 +2,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 15px;
+  text-decoration: none;
 }
 
 .sidebarFriendImg {
@@ -11,3 +12,7 @@
   object-fit: cover;
   margin-right: 10px;
 }
+/* .sidebarFriendName {
+  color: black;
+  text-decoration: none;
+} */
