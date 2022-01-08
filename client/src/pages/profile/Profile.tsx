@@ -29,8 +29,6 @@ const Profile = () => {
       setIsLoading(false);
     };
     fetchUser();
-
-    console.log(isLoading);
   }, [username]);
 
   return (

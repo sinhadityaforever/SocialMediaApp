@@ -12,6 +12,11 @@
 .topbarLeft {
   flex: 3;
 }
+@media (max-width: 768px) {
+  .topbarLeft {
+    flex: 5;
+  }
+}
 
 .logo {
   font-size: 24px;
@@ -43,6 +48,14 @@
   border: none;
   width: 70%;
 }
+@media (max-width: 768px) {
+  .topbarCenter {
+    display: none;
+  }
+  .searchbar {
+    display: none;
+  }
+}
 
 .searchInput:focus {
   outline: none;
@@ -52,7 +65,7 @@
   flex: 4;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: end;
   color: white;
   margin-left: 10px;
 }
@@ -66,8 +79,7 @@
 .topbarIcons {
   display: flex;
 }
-
-.topbarIconItem {
+.topbarIcons .topbarIconItem {
   margin-right: 15px;
   cursor: pointer;
   position: relative;
@@ -88,6 +100,11 @@
   font-size: 12px;
 }
 
+.topbarRightContainer {
+  display: flex;
+
+  justify-content: right;
+}
 .topbarImg {
   width: 32px;
   height: 32px;
@@ -95,4 +112,9 @@
   object-fit: cover;
   cursor: pointer;
   margin-right: 20px;
+}
+@media (max-width: 768px) {
+  .topbarImg {
+    margin-right: 10px;
+  }
 }

@@ -1,4 +1,5 @@
 import "./share.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import {
   PermMedia,
   Label,
@@ -23,7 +24,6 @@ const Share = () => {
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       setPreview(reader.result);
-      console.log(preview);
     };
   };
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -56,7 +56,6 @@ const Share = () => {
       window.location.reload();
     } catch (error) {
       alert("Failed to post! Try agin :(");
-      console.log(error);
     }
     setLoading(false);
   };
@@ -108,25 +107,16 @@ const Share = () => {
                 accept=".png, .jpg, .jpeg"
               ></input>
             </div>
-            <div className="shareOption">
-              <Label htmlColor="blue" className="shareIcon" />
-              <span className="shareOptionText">Tag</span>
-            </div>
-            <div className="shareOption">
-              <Room htmlColor="green" className="shareIcon" />
-              <span className="shareOptionText">Location</span>
-            </div>
-            <div className="shareOption">
-              <EmojiEmotions htmlColor="goldenrod" className="shareIcon" />
-              <span className="shareOptionText">Feelings</span>
-            </div>
           </label>
-          <button className="shareButton" type="submit">
-            {loading ? (
-              <CircularProgress size="20px" style={{ color: "white" }} />
-            ) : (
-              "Share"
-            )}
+          <button
+            className="btn btn-primary btn-md btn-block "
+            type="submit"
+            style={{
+              backgroundColor: `${loading ? "grey" : "green"}`,
+              border: "none",
+            }}
+          >
+            {loading ? "Loading" : "Share"}
           </button>
         </form>
       </div>

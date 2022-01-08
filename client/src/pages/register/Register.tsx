@@ -52,7 +52,6 @@ const Register = () => {
           setButtonText("Sign Up");
         }
       } catch (error) {
-        console.log(error);
         alert("Request failed");
         setButtonText("Sign Up");
       }

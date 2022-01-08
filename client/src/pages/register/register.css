@@ -36,6 +36,7 @@
   height: 400px;
   padding: 20px;
   background-color: white;
+
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -83,4 +84,34 @@
   font-size: 20px;
   font-weight: 500;
   cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .login {
+    display: block;
+    width: 100%;
+
+    border: none;
+    overflow: hidden;
+  }
+  .loginWrapper {
+    display: block;
+    width: 90%;
+    margin: 0 auto;
+    height: 90%;
+    text-align: center;
+  }
+  .loginLogo {
+    font-size: 4rem;
+
+    margin-top: 90px;
+  }
+  .loginDesc {
+    visibility: hidden;
+    font-size: 10px;
+    text-align: center;
+  }
+  .loginRegisterButton {
+    width: 100%;
+  }
 }

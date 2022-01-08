@@ -55,14 +55,14 @@ const Topbar = () => {
         </div>
       </div>
       <div className="topbarRight">
-        <div className="topbarLinks">
+        {/* <div className="topbarLinks">
           <Link to={"/"}>
             <span style={{ color: "white" }} className="topbarLink">
               Homepage
             </span>
           </Link>
-        </div>
-        <div className="topbarIcons container">
+        </div> */}
+        <div className="topbarIcons topbarRightContainer">
           <div className="topbarIconItem" onClick={submit}>
             <Tooltip title="Log Out">
               <PowerSettingsNew />

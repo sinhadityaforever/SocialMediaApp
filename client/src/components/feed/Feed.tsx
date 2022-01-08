@@ -37,8 +37,6 @@ const Feed: React.FC<FeedProps> = ({ username, isProfile }) => {
       loadRef.current.complete();
     };
     fetchPosts();
-
-    console.log(posts);
   }, [username]);
 
   return (

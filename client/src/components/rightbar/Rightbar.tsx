@@ -17,8 +17,6 @@ type Props = {
 };
 
 const Rightbar: React.FC<Props> = ({ user, showFollow }) => {
-  console.log(user);
-
   const dispatch = useAppDispatch();
   const selectedUser = useAppSelector((state) => state.user.user);
   const [friends, setFriends] = useState<any[]>([]);
@@ -33,16 +31,12 @@ const Rightbar: React.FC<Props> = ({ user, showFollow }) => {
   }, [user]);
   useEffect(() => {
     const getAllSuggestions = async () => {
-      console.log(selectedUser?.followings);
-
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_SERVER}/users/all/${selectedUser?._id}`
+          `${process.env.REACT_APP_SERVER}/users/friends/${selectedUser?._id}`
         );
         setUsers(res.data);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
     getAllSuggestions();
   }, []);
@@ -54,16 +48,12 @@ const Rightbar: React.FC<Props> = ({ user, showFollow }) => {
           `${process.env.REACT_APP_SERVER}/users/friends/${user!._id}`
         );
         setFriends(friendList.data);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
     getFriends();
   }, [user]);
 
   const handleClick = async () => {
-    console.log("clicked");
-
     try {
       if (followed) {
         await axios.put(
@@ -73,7 +63,6 @@ const Rightbar: React.FC<Props> = ({ user, showFollow }) => {
           }
         );
         dispatch(unfollow(user?._id));
-        console.log("dispatched");
       } else {
         await axios.put(
           `${process.env.REACT_APP_SERVER}/users/${user?._id}/follow`,
@@ -82,13 +71,9 @@ const Rightbar: React.FC<Props> = ({ user, showFollow }) => {
           }
         );
         dispatch(follow(user?._id));
-        console.log("dispatched");
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
     setFollowed(!followed);
-    console.log("end");
   };
 
   const HomeRightbar = () => {

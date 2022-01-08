@@ -10,18 +10,15 @@ export const loginHandler = async (
   try {
     dispatch(loginStart());
 
-    const res = await axios.post("http://localhost:4000/api/v1/auth/login", {
+    const res = await axios.post(`${process.env.REACT_APP_SERVER}/auth/login`, {
       email,
       password,
     });
-    console.log(res.data);
 
     dispatch(loginSuccess(res.data));
 
     localStorage.setItem("user", JSON.stringify(res.data));
-    console.log(localStorage.getItem("user"));
   } catch (error) {
-    console.log(error);
     alert("Failed to login. Check your credentials.");
     dispatch(loginFailed());
   }

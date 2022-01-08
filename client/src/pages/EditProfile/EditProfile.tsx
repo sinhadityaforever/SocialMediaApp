@@ -20,7 +20,6 @@ const EditProfile = () => {
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       setPreview(reader.result);
-      console.log(preview);
     };
   };
 

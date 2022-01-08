@@ -1,7 +1,8 @@
 import express, { Express } from "express";
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
-dotenv.config();
+const path = require("path");
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 import endpoints from "./endpoint.config";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -42,4 +43,5 @@ app.use("/api/v1/posts", postRoutes);
 //start server
 app.listen(endpoints.port, () => {
   console.log(`Server running on port: ${endpoints.port}`);
+  console.log(process.env.PORT);
 });

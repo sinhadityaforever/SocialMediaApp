@@ -17,8 +17,6 @@ const Login = () => {
     e.preventDefault();
     await loginHandler(email.current.value, password.current.value, dispatch);
   };
-  console.log(selectedUser);
-  console.log(selectIsFetching);
 
   return (
     <div className="login">
@@ -57,7 +55,7 @@ const Login = () => {
                 "Log In"
               )}
             </button>
-            <span className="loginForgot">Forgot Password?</span>
+
             <button
               className="loginRegisterButton"
               onClick={() => navigate("/register")}

@@ -18,8 +18,6 @@ const Post: React.FC<postProps> = ({ post, isProfile }) => {
 
   const likeHandler = async () => {
     try {
-      console.log(post._id);
-
       await axios.put(
         `${process.env.REACT_APP_SERVER}/posts/${post._id}/like`,
         { userId: selectedUser?._id }
@@ -68,12 +66,12 @@ const Post: React.FC<postProps> = ({ post, isProfile }) => {
           </div>
           <div className="postBottom">
             <div className="postBottomLeft">
-              <img
+              {/* <img
                 className="likeIcon"
                 src="/assets/like.png"
                 onClick={likeHandler}
                 alt=""
-              />
+              /> */}
               <img
                 className="likeIcon"
                 src="/assets/heart.png"
@@ -82,9 +80,9 @@ const Post: React.FC<postProps> = ({ post, isProfile }) => {
               />
               <span className="postLikeCounter">{like} people like it</span>
             </div>
-            <div className="postBottomRight">
+            {/* <div className="postBottomRight">
               <span className="postCommentText">{post.comment} comments</span>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

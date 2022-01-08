@@ -27,9 +27,7 @@ const Sidebar = () => {
           `${process.env.REACT_APP_SERVER}/users/all/${selectedUser?._id}`
         );
         setUsers(res.data);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
     getAllSuggestions();
   }, []);

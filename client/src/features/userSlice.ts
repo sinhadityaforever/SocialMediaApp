@@ -35,7 +35,6 @@ export const userSlice = createSlice({
     },
     follow: (state, action: PayloadAction<any>) => {
       state.user!.followings = [state.user!.followings?.push(action.payload)];
-      console.log(JSON.stringify(state.user));
 
       localStorage.removeItem("user");
       localStorage.setItem("user", JSON.stringify(state.user));
@@ -44,7 +43,7 @@ export const userSlice = createSlice({
       state.user!.followings = state.user!.followings?.filter(
         (following) => following !== action.payload
       );
-      console.log(JSON.stringify(state.user));
+
       localStorage.removeItem("user");
       localStorage.setItem("user", JSON.stringify(state.user));
     },

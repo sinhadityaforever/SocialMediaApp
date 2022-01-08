@@ -21,11 +21,9 @@ function App() {
     const loggedInUser = localStorage.getItem("user");
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser);
-      console.log(foundUser);
 
       dispatch(loginSuccess(foundUser));
     } else {
-      console.log("cant find storedUser");
     }
   }, []);
   const user = useAppSelector((state) => state.user.user);

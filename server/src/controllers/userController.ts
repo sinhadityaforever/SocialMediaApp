@@ -44,7 +44,10 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
         console.log("halahaala" + user);
       }
 
-      res.status(200).json("Account has been updated");
+      res
+        .status(200)
+        .json("Account has been updated")
+        .setHeader("Access-Control-Allow-Origin", "*");
     } catch (err) {
       console.log(err);
 
@@ -73,6 +76,11 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
     res.status(400).json(error);
   }
 };
+const testUser = async (req: Request, res: Response): Promise<void> => {
+  res.status(200).json({
+    message: "Success",
+  });
+};
 
 const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -82,7 +90,7 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
       ? await User.findOne({ username: username })
       : await User.findById(userId);
 
-    res.status(200).json(user);
+    res.status(200).json(user).setHeader("Access-Control-Allow-Origin", "*");
   } catch (err) {
     res.status(500).json(err);
   }
@@ -91,13 +99,21 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
 const getFriends = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = await User.findById(req.params.userId);
+
+    // let friendsArray = [];
+    // const followingList = user?.followings;
+    // for (let index = 0; index < followingList!.length; index++) {
+    //   let friend = await User.findById(followingList![index]._id);
+    //   friendsArray.push(friend);
+    // }
+
     const friends = await Promise.all(
       user!.followings!.map((friendId) => {
         return User.findById(friendId);
       })
     );
 
-    res.status(200).json(friends);
+    res.status(200).json(friends).setHeader("Access-Control-Allow-Origin", "*");
   } catch (error) {
     res.status(400).json(error);
   }
@@ -114,7 +130,10 @@ const followUser = async (req: Request, res: Response): Promise<void> => {
           await currentUser!.updateOne({
             $push: { followings: req.params.id },
           });
-          res.status(200).json("user has been followed");
+          res
+            .status(200)
+            .json("user has been followed")
+            .setHeader("Access-Control-Allow-Origin", "*");
         } else {
           res.status(403).json("you already follow this user");
         }
@@ -140,7 +159,10 @@ const unfollowUser = async (req: Request, res: Response): Promise<void> => {
           await currentUser!.updateOne({
             $pull: { followings: req.params.id },
           });
-          res.status(200).json("user has been unfollowed");
+          res
+            .status(200)
+            .json("user has been unfollowed")
+            .setHeader("Access-Control-Allow-Origin", "*");
         } else {
           res.status(403).json("you dont follow this user");
         }
@@ -159,7 +181,10 @@ const validateUsername = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = await User.exists({ username: req.params.username });
     if (user) {
-      res.status(201).json({ message: "There exists a user" });
+      res
+        .status(201)
+        .json({ message: "There exists a user" })
+        .setHeader("Access-Control-Allow-Origin", "*");
     } else {
       res.status(202).json({ message: "Theres no user" });
     }
@@ -175,7 +200,7 @@ const getAllUsers = async (req: Request, res: Response): Promise<void> => {
     const users = await User.find({
       _id: { $nin: req.params.userId as any },
     });
-    res.status(200).json(users);
+    res.status(200).json(users).setHeader("Access-Control-Allow-Origin", "*");
   } catch (error) {
     console.log(error);
     res.status(400).json(error);
@@ -192,6 +217,7 @@ export {
   getFriends,
   validateUsername,
   getAllUsers,
+  testUser,
 };
 function useState(arg0: boolean): [any, any] {
   throw new Error("Function not implemented.");

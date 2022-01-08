@@ -20,10 +20,13 @@ const register = async (req: Request, res: Response): Promise<void> => {
     const newUser: IUser & {
       _id: any;
     } = await user.save();
-    res.status(200).json({
-      message: "success",
-      user: newUser,
-    });
+    res
+      .status(200)
+      .json({
+        message: "success",
+        user: newUser,
+      })
+      .setHeader("Access-Control-Allow-Origin", "*");
   } catch (error) {
     res.status(400).json({
       error: error,
@@ -51,7 +54,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
     );
     !validPassword && res.status(400).json("wrong password");
 
-    res.status(200).json(user);
+    res.status(200).json(user).setHeader("Access-Control-Allow-Origin", "*");
   } catch (err) {
     res.status(500).json({
       message: "failed",
